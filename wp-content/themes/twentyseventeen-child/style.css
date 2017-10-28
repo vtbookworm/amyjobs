@@ -89,3 +89,22 @@ body.has-header-video .site-description {
 .post-edit-link {
 	color: gray;
 }
+
+#frm_search {
+	width:60%;
+	background-color: #d6d4d4;
+	color: #000;
+	float: left;
+	height: 45px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+
+.searchsubmit {
+	height: 45px;
+	width: 15%;
+	background-color: #000 !important;
+	color: #fff;
+	float: left;
+	margin-bottom: 20px;
+}
