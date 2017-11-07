@@ -2297,7 +2297,7 @@ DEFAULT_HTML;
             }
 		}
 
-        return $val;
+        return apply_filters( 'frm_xml_field_export_value', $val, $field );
     }
 
 	public static function get_file_icon( $media_id ) {
