@@ -108,3 +108,26 @@ body.has-header-video .site-description {
 	float: left;
 	margin-bottom: 20px;
 }
+
+.job_tr a {
+	color: #000099;
+}
+
+.job_tr a:hover {
+	text-decoration: underline;
+}
+
+#content {
+	background-color: #e6f2ff;
+}
+
+.cal_entry {
+	font-size: 12px;
+	text-transform: uppercase;
+	color: purple;
+	margin-bottom: 10px;
+}
+
+.cal_entry a {
+	color: purple;
+}

@@ -197,9 +197,42 @@ class FrmProAppHelper{
 			$from_format = $frmpro_settings->date_format;
 		}
 
-		$date = date_create_from_format( $from_format, $date_str );
+		if ( $from_format == 'Y-m-d' && strpos( $date_str, '00:00:00' ) ) {
+			$date_str = str_replace( ' 00:00:00', '', $date_str );
+		}
 
-		return $date->format( $to_format );
+		$date = date_create_from_format( $from_format, $date_str );
+		if ( $date ) {
+			$new_date = $date->format( $to_format );
+		} else {
+			$new_date = self::convert_date_fallback( $date_str, $from_format, $to_format );
+		}
+		return $new_date;
+	}
+
+	private static function convert_date_fallback( $date_str, $from_format, $to_format ) {
+		$base_struc     = preg_split( "/[\/|.| |-]/", $from_format );
+		$date_str_parts = preg_split( "/[\/|.| |-]/", $date_str );
+		$date_elements = array();
+
+		$p_keys = array_keys( $base_struc );
+		foreach ( $p_keys as $p_key ) {
+			if ( ! empty( $date_str_parts[ $p_key ] ) ) {
+				$date_elements[ $base_struc[ $p_key ] ] = $date_str_parts[ $p_key ];
+			} else {
+				return false;
+			}
+		}
+
+		if ( is_numeric( $date_elements['m'] ) ) {
+			$day = ( isset( $date_elements['j'] ) ? $date_elements['j'] : $date_elements['d'] );
+			$year = ( isset( $date_elements['Y'] ) ? $date_elements['Y'] : $date_elements['y'] );
+			$dummy_ts = mktime( 0, 0, 0, $date_elements['m'], $day, $year );
+		} else {
+			$dummy_ts = strtotime( $date_str );
+		}
+
+		return date( $to_format, $dummy_ts );
 	}
 
 	public static function get_edit_link( $id ) {

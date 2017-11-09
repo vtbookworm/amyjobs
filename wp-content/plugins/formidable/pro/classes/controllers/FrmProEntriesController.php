@@ -1470,26 +1470,29 @@ class FrmProEntriesController{
     }
 
 	public static function filter_shortcode_value( $value, $tag, $atts, $field ) {
-        if ( isset($atts['striphtml']) && $atts['striphtml'] ) {
-            $allowed_tags = apply_filters('frm_striphtml_allowed_tags', array(), $atts);
-            $value = wp_kses($value, $allowed_tags);
-        }
+		if ( isset( $atts['striphtml'] ) && $atts['striphtml'] ) {
+			self::kses_deep( $value );
+		} elseif ( ! isset( $atts['keepjs'] ) || ! $atts['keepjs'] ) {
+			FrmAppHelper::sanitize_value( 'wp_kses_post', $value );
+		}
 
-        if ( ! isset($atts['keepjs']) || ! $atts['keepjs'] ) {
-            if ( is_array($value) ) {
-                foreach ( $value as $k => $v ) {
-                    $value[$k] = wp_kses_post($v);
-                    unset($k, $v);
-                }
-            } else {
-                $value = wp_kses_post($value);
-            }
-        }
+		return self::get_option_label_for_saved_value( $value, $field, $atts );
+	}
 
-		$value = self::get_option_label_for_saved_value( $value, $field, $atts );
-
-        return $value;
-    }
+	/**
+	 * @since 2.05.03
+	 */
+	private static function kses_deep( &$value ) {
+		$allowed_tags = apply_filters( 'frm_striphtml_allowed_tags', array(), $atts );
+		if ( is_array( $value ) ) {
+			foreach ( $value as $k => $v ) {
+				$value[ $k ] = wp_kses( $v, $allowed_tags );
+				unset( $k, $v );
+			}
+		} else {
+			$value = wp_kses( $value, $allowed_tags );
+		}
+	}
 
 	/**
 	 * Get the option label from a saved value, if a field has separate values and saved_value="1" is not set
