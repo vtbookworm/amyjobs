@@ -124,10 +124,10 @@ body.has-header-video .site-description {
 .cal_entry {
 	font-size: 12px;
 	text-transform: uppercase;
-	color: purple;
+	color: #000099;
 	margin-bottom: 10px;
 }
 
 .cal_entry a {
-	color: purple;
+	color: #000099;
 }
